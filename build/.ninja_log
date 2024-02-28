@@ -1,0 +1,10 @@
+# ninja log v5
+875	6212	1708257328516461174	client/CMakeFiles/client.dir/main.cc.o	6378db815e79141e
+6212	7733	1708257330032434510	client/client	ce5f412ec6ca912c
+12	7828	1708257330124432893	server/CMakeFiles/server.dir/main.cpp.o	9e5a2979c4a140ff
+9	2006	1708257324308535265	common/CMakeFiles/common.dir/gsproto.cpp.o	edb39691765cdd23
+11	83	1708257322388569110	common/CMakeFiles/common.dir/gscmds.cpp.o	19239ac9b23dd998
+15	3251	1708257325552513350	server/CMakeFiles/server.dir/init.cpp.o	e8052ba5e5fae978
+84	8526	1708257330820420658	server/CMakeFiles/server.dir/cmdexecutor.cpp.o	d55148f447b1dd65
+17	875	1708257323180555147	server/CMakeFiles/server.dir/cmdparser.cpp.o	d66ee546ca3e95f2
+13	5593	1708257327888472223	server/CMakeFiles/server.dir/dbstore.cpp.o	9230c35de41d3a9e

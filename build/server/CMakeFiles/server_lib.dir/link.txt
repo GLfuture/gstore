@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g -shared -Wl,-soname,libserver_lib.so -o libserver_lib.so CMakeFiles/server_lib.dir/dbstore.cpp.o CMakeFiles/server_lib.dir/init.cpp.o CMakeFiles/server_lib.dir/cmdparser.cpp.o CMakeFiles/server_lib.dir/cmdexecutor.cpp.o 

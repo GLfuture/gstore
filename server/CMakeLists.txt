@@ -1,0 +1,5 @@
+project(server)
+set(SRC_LIST dbstore.cpp init.cpp  cmdparser.cpp cmdexecutor.cpp )
+add_executable(server main.cpp ${SRC_LIST})
+target_link_libraries(server common galay-shared ssl crypto)
+add_library(server_lib SHARED ${SRC_LIST})
