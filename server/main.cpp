@@ -1,12 +1,7 @@
 ﻿#include "init.h"
-#include <galay/kernel/callback.h>
 #include <signal.h>
-using namespace galay;
 
-Tcp_Server<GS_Proto_Request,GS_Proto_Response>::uptr server;
-
-
-Task<> func(Task_Base::wptr task)
+galay::Task<> func(galay::Task_Base::wptr task)
 {
     auto request = std::dynamic_pointer_cast<GS_Proto_Request>(task.lock()->get_req());
     auto response = std::dynamic_pointer_cast<GS_Proto_Response>(task.lock()->get_resp());
@@ -24,7 +19,7 @@ Task<> func(Task_Base::wptr task)
     }
     head.m_length = retstr.length();
     response->get_body() = retstr;
-    task.lock()->control_task_behavior(GY_TASK_WRITE);
+    task.lock()->control_task_behavior(galay::GY_TASK_WRITE);
     return {};
 }
 
@@ -32,24 +27,18 @@ void sig_handle(int sig)
 {
     printf("stop......\n");
     g_store.reset();
-    server->stop();
+    g_server->stop();
+    g_aof_executor->stop();
+    if(g_aof_th.joinable()){
+        g_aof_th.join();
+    };
     printf("stop success\n");
 }
 
 int main()
 {
     signal(SIGINT,sig_handle);
-    Callback_ConnClose::set([](int fd){
-        while(!g_affair_queue.empty()){
-            g_affair_queue.pop();
-        }
-        while(!g_back_stack.empty()){
-            g_back_stack.pop();
-        }
-        GS_Executor::affairing() = false;
-    });
-    auto config = Config_Factory::create_tcp_server_config(8080, Engine_Type::ENGINE_EPOLL, 5, -1, 1);
-    server = std::make_unique<Tcp_Server<GS_Proto_Request,GS_Proto_Response>>(config);
-    server->start(func);
+    init_conf();
+    g_server->start(func);
     return 0;
 }

@@ -41,6 +41,7 @@ std::string GS_Set::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head& he
     }
     if (g_store->cmd_set(cmds[1], cmds[2]) == DB_OP_OK) head.m_ret_code = RET_OK;
     if(affairing) g_back_stack.push({"delete",cmds[1]});
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 
@@ -81,9 +82,8 @@ std::string GS_Delete::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head&
     if(ret == DB_OP_NO_KEY) head.m_ret_code = RET_NO_KEY;
     else {
         head.m_ret_code = RET_OK;
-        if(affairing) {
-            g_back_stack.push({"set",cmds[1],value});
-        }
+        if(affairing) g_back_stack.push({"set",cmds[1],value});
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     return "";
 }
@@ -233,6 +233,7 @@ std::string GS_Vdelete::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
             }
             g_back_stack.push(arr);
         }
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     return "";
 }
@@ -310,6 +311,7 @@ std::string GS_Verase::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head&
     {
         head.m_ret_code = RET_OK;
         if(affairing) g_back_stack.push({"vinsert",cmds[1],cmds[2],value});
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     break;
     }
@@ -352,6 +354,7 @@ std::string GS_Vinsert::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
     {
         head.m_ret_code = RET_OK; 
         if(affairing) g_back_stack.push({"verase",cmds[1],cmds[2]});
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
         break;
     default:
@@ -407,6 +410,7 @@ std::string GS_Vappend::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
         }
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 
@@ -539,6 +543,7 @@ std::string GS_Ldelete::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
             }
             g_back_stack.push(arr);
         }
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     return "";
 }
@@ -577,6 +582,7 @@ std::string GS_Lerase::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head&
         }
         g_back_stack.push(arr);
     }
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return std::to_string(num);
 }
 
@@ -628,6 +634,7 @@ std::string GS_Lpush::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head& 
         }
         g_back_stack.push(arr);
     }
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 
@@ -659,6 +666,7 @@ std::string GS_Rpush::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head& 
         g_back_stack.push(arr);
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 
@@ -793,6 +801,7 @@ std::string GS_Rbdelete::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Hea
             }
             g_back_stack.push(arr);
         }
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     return "";
 }
@@ -825,6 +834,7 @@ std::string GS_Rberase::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
         }
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return std::to_string(num);
 }
 
@@ -867,6 +877,7 @@ std::string GS_Rbappend::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Hea
         }
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 
@@ -1023,6 +1034,7 @@ std::string GS_Hdelete::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
             }
             g_back_stack.push(arr);
         }
+        if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     }
     return "";
 }
@@ -1053,6 +1065,7 @@ std::string GS_Herase::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head&
         }
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return std::to_string(num);
 }
 
@@ -1098,6 +1111,7 @@ std::string GS_Happend::exec(galay::Scheduler_Base::wptr scheduler,GS_Proto_Head
         }
     }
     head.m_ret_code = RET_OK;
+    if(g_aof_on) g_aof_queue->push(std::forward<std::vector<std::string>&&>(cmds));
     return "";
 }
 

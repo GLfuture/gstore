@@ -1,1 +1,0 @@
-/usr/bin/c++ -g -rdynamic CMakeFiles/client.dir/main.cc.o ../common/CMakeFiles/common.dir/gsproto.cpp.o ../common/CMakeFiles/common.dir/gscmds.cpp.o -o client  -lgalay-shared -lssl -lcrypto 

@@ -3,6 +3,7 @@ project(gstore)
 set(CMAKE_BUILD_TYPE Debug)
 set(CXX_STANDARD_REQUIRED on)
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_INSTALL_PREFIX ${PROJECT_SOURCE_DIR})
 
 find_package(OpenSSL REQUIRED)
 
